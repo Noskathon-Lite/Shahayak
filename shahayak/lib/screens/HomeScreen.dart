@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'User.dart';
 import 'post.dart';
@@ -73,7 +71,7 @@ class _HomescreenState extends State<Homescreen> {
                     DropdownButton<String>(
                       isExpanded: true,
                       value: selectedCategory,
-                      hint: const Text('Select a category'), // Added hint
+                      hint: const Text('Select a category'),
                       items: categories.map((category) {
                         return DropdownMenuItem<String>(
                           value: category.categoryName,
@@ -117,9 +115,9 @@ class _HomescreenState extends State<Homescreen> {
                           child: Text(type),
                         );
                       }).toList(),
-                      onChanged: (value) {
+                      onChanged: (String? value) {
                         setState(() {
-                          selectedType = value!;
+                          selectedType = value;
                         });
                       },
                     ),
@@ -205,6 +203,12 @@ class _HomescreenState extends State<Homescreen> {
             spreadRadius: 0),
       ]),
       child: TextField(
+          onChanged: (query) {
+            filteredPosts = allPosts
+                .where((post) =>
+                    post.title.toLowerCase().contains(query.toLowerCase()))
+                .toList();
+          },
           decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
