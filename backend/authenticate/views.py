@@ -8,7 +8,7 @@ from .renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Profile
 from rest_framework.permissions import IsAuthenticated
-
+from .emails import *
 
 # Create your views here.
 
@@ -28,9 +28,10 @@ class UserRegistrationView(APIView):
         
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
+            send_otp_via_email(serializer.data['email'])
             token = get_tokens_for_user(user)
             Profile.objects.get_or_create(user=user)
-            return Response({'token': token,'msg' : 'Registration succesful'}, status = status.HTTP_201_CREATED)
+            return Response({'token': token,'msg' : 'Registration succesful','data': serializer.data}, status = status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
     
@@ -86,3 +87,37 @@ class ProfileDetailView(APIView):
             return Response({'msg': 'Profile deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
         except Profile.DoesNotExist:
             return Response({'error': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class VerifyOTP(APIView):
+    def post(self, request):
+        try:
+            data = request.data
+            serializer = VerifyAccountSerializer(data=data)
+            
+        
+            if serializer.is_valid(raise_exception=True):
+                email = serializer.validated_data['email']
+                otp = serializer.validated_data['otp']
+                
+                
+                user = User.objects.filter(email=email)
+                if not user.exists():
+                    return Response({'msg': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+                
+                user = user.first()
+                
+            
+                if user.otp != otp:
+                    return Response({'msg': 'Wrong OTP'}, status=status.HTTP_400_BAD_REQUEST)
+                
+            
+                user.is_verified = True
+                user.save()
+                
+                return Response({'msg': 'Account verified', 'data': serializer.data}, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            # Log the exception
+            print(f"Error: {str(e)}")
+            # Return a generic error message
+            return Response({'msg': 'An error occurred, please try again later.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
