@@ -27,34 +27,53 @@ class _HomescreenState extends State<Homescreen> {
     _getCategories();
     return Scaffold(
       appBar: appBar(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _SearchField(),
+          SizedBox(height: 40),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+              ),
+              SizedBox(height: 15),
+              Container(
+                height: 40,
+                color: Colors.black,
+                child: ListView.builder(
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      color: categories[index].boxColor,
+                    );
+                  },
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 
   Container _SearchField() {
     return Container(
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-            color: const Color(0xff1D1537).withOpacity(0.11),
-            blurRadius: 40,
-            spreadRadius: 0),
-      ]),
-      child: Row(
-        children: [
-          SvgPicture.asset(
-            'assets/icons/Search.svg',
-          ),
-          const SizedBox(width: 10),
-          const Text(
-            'Search',
-            style: TextStyle(
-              color: Colors.grey,
+        margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+              color: const Color(0xff1D1537).withOpacity(0.11),
+              blurRadius: 40,
+              spreadRadius: 0),
+        ]),
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: 'search',
+            hintStyle: TextStyle(
+              color: Colors.black.withOpacity(0.6),
             ),
           ),
-        ],
-      ),
-    );
+        ));
   }
 
   AppBar appBar() {
@@ -72,7 +91,7 @@ class _HomescreenState extends State<Homescreen> {
       leading: GestureDetector(
         onTap: () {},
         child: Container(
-          margin: EdgeInsets.all(10),
+          margin: const EdgeInsets.all(10),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -86,7 +105,7 @@ class _HomescreenState extends State<Homescreen> {
         GestureDetector(
           onTap: () {},
           child: Container(
-            margin: EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
             alignment: Alignment.center,
             width: 37,
             decoration: BoxDecoration(
