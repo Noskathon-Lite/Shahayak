@@ -20,8 +20,9 @@ func NewRoundRobinLoadBalancer(servers []server.Server, port int) *RoundRobinBal
 	}
 }
 
-func (r *RoundRobinBalancer) GetServer() (*server.Server, error) {
+func (r *RoundRobinBalancer) GetServer() {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
+	server := r.Servers[r.CurrentIndex%len(r.Servers)]
 
 }
