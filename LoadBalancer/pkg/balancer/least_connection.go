@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
+	"LoadBalancer/pkg/utils"
 )
 
 type LeastConnection struct {
@@ -57,4 +58,10 @@ func (r *RoundRobinBalancer) LeastConnectionHealthCheck() {
 
 		}
 	}
+}
+
+func (r *RoundRobinBalancer) LeastConnectionServeProxy(res http.ResponseWriter, req *http.Request) {
+	targetedServer := r.GetServer()
+	fmt.Println("the targeted server is ", targetedServer)
+	targetedServer.ServeHttp(res, req)
 }
