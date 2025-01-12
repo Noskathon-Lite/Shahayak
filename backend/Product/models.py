@@ -9,12 +9,17 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    TYPES = [
+        ('exchange', 'Exchange'),
+        ('donation', 'Donation'),
+    ]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=255)
     category = models.CharField(
         max_length=50,
         choices=[]  
     )
+    type = models.CharField(max_length=255, choices=TYPES, default='exchange')
     image = models.ImageField(default='images/', upload_to='images/product/')
     price = models.FloatField()
     purchase_date = models.CharField(max_length=255)
