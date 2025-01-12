@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User,Profile,Comment
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     password2= serializers.CharField(style = {'input_type': 'password' }, write_only= True)
@@ -49,3 +49,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     
     def create(self, validate_data):
         return User.objects.create_user(**validate_data)
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['profile_picture','phone_number','about']
+
