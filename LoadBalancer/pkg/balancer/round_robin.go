@@ -2,27 +2,51 @@ package balancer
 
 import (
 	"LoadBalancer/pkg/server"
+	"net/http"
 	"sync"
 )
 
 type RoundRobinBalancer struct {
-	Servers      []server.Server
-	CurrentIndex int
-	port         int
-	mutex        sync.Mutex
+	Servers        []server.Server
+	CurrentIndex   int
+	port           string
+	mutex          sync.Mutex
+	HealthCheckUrl string
 }
 
-func NewRoundRobinLoadBalancer(servers []server.Server, port int) *RoundRobinBalancer {
+func NewRoundRobinLoadBalancer(servers []server.Server, port string, healthCheckUrl string) *RoundRobinBalancer {
 	return &RoundRobinBalancer{
-		Servers:      servers,
-		CurrentIndex: 0,
-		port:         port,
+		Servers:        servers,
+		CurrentIndex:   0,
+		port:           port,
+		HealthCheckUrl: healthCheckUrl,
 	}
 }
 
-func (r *RoundRobinBalancer) GetServer() {
+func (r *RoundRobinBalancer) GetServer() server.Server {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	server := r.Servers[r.CurrentIndex%len(r.Servers)]
+	availableServer := r.Servers[r.CurrentIndex%len(r.Servers)]
+	for {
+		if availableServer.IsAlive() {
+			return availableServer
+		}
+		r.CurrentIndex++
+	}
+}
 
+func (r *RoundRobinBalancer) HealthCheck() {
+	for {
+		for i := range r.Servers {
+			server := r.Servers[i]
+			resp, err := http.Get(server.GetAddress() + r.HealthCheckUrl)
+			if err != nil || resp.Status != "200" {
+				server.Shutdown()
+				HandleError(err)
+			} else {
+				server.MakeReady()
+			}
+
+		}
+	}
 }
