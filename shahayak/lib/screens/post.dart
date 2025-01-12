@@ -8,6 +8,10 @@ class Post {
   DateTime purchaseDate;
   String productCondition;
   String caption;
+  String username;
+  String userProfilePic;
+  int likes;
+  int comments;
 
   Post({
     required this.id,
@@ -19,6 +23,10 @@ class Post {
     required this.purchaseDate,
     required this.productCondition,
     required this.caption,
+    required this.username,
+    required this.userProfilePic,
+    required this.likes,
+    required this.comments,
   });
 
   static List<Post> getPosts() {
@@ -33,6 +41,10 @@ class Post {
         purchaseDate: DateTime(2023, 1, 10),
         productCondition: 'Used',
         caption: 'A well-loved copy of Harry Potter.',
+        username: 'Ichiban Kasuga',
+        userProfilePic: 'assets/ichiban.jpg',
+        likes: 10,
+        comments: 5,
       ),
       Post(
         id: 2,
@@ -44,6 +56,10 @@ class Post {
         purchaseDate: DateTime(2023, 3, 15),
         productCondition: 'Used',
         caption: 'A classic fantasy novel in great condition.',
+        username: 'Majima Goro',
+        userProfilePic: 'assets/majima.jpg',
+        likes: 7,
+        comments: 3,
       ),
       Post(
         id: 3,
@@ -55,6 +71,10 @@ class Post {
         purchaseDate: DateTime(2023, 5, 20),
         productCondition: 'New',
         caption: 'A brand new T-shirt for exchange.',
+        username: 'Kiryu Kazuma',
+        userProfilePic: 'assets/kiryu.jpg',
+        likes: 25,
+        comments: 8,
       ),
       Post(
         id: 4,
@@ -66,6 +86,10 @@ class Post {
         purchaseDate: DateTime(2023, 8, 25),
         productCondition: 'Used',
         caption: 'Gently used jeans in good condition.',
+        username: 'General Radahn',
+        userProfilePic: 'assets/radahn.jpg',
+        likes: 15,
+        comments: 4,
       ),
     ];
   }
@@ -81,6 +105,10 @@ class Post {
       purchaseDate: DateTime.parse(json['purchaseDate']),
       productCondition: json['productCondition'],
       caption: json['caption'],
+      username: json['username'],
+      userProfilePic: json['userProfilePic'],
+      likes: json['likes'] ?? 0,
+      comments: json['comments'] ?? 0,
     );
   }
 }

@@ -30,7 +30,6 @@ class _HomescreenState extends State<Homescreen> {
     _applyFilters();
   }
 
-  // Apply filters to posts
   void _applyFilters() {
     setState(() {
       filteredPosts = allPosts.where((post) {
@@ -44,7 +43,7 @@ class _HomescreenState extends State<Homescreen> {
     });
   }
 
-  // Fetch posts from API
+  // Fetching posts from API
   Future<void> _fetchPosts() async {
     try {
       List<post_screen.Post> fetchedPosts = await ApiService().fetchPosts();
@@ -52,7 +51,7 @@ class _HomescreenState extends State<Homescreen> {
         posts = fetchedPosts;
         allPosts = List.from(posts);
         isLoading = false;
-        filteredPosts = List.from(posts); // Initialize filtered posts
+        filteredPosts = List.from(posts);
       });
     } catch (e) {
       setState(() {
@@ -80,7 +79,6 @@ class _HomescreenState extends State<Homescreen> {
         children: [
           _SearchField(),
           const SizedBox(height: 20),
-          // Filter buttons (Donation and Exchange)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
@@ -143,24 +141,13 @@ class _HomescreenState extends State<Homescreen> {
             ),
           ],
           const SizedBox(height: 10),
-          // Display filtered posts
           Expanded(
             child: isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
                     itemCount: filteredPosts.length,
                     itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: Image.asset(
-                          filteredPosts[index].imageUrl ??
-                              'assets/placeholder.png', // Default placeholder if imageUrl is null
-                          width: 50, // Adjust width/height as needed
-                          height: 50,
-                          fit: BoxFit.cover,
-                        ),
-                        title: Text(filteredPosts[index].productName),
-                        subtitle: Text(filteredPosts[index].type),
-                      );
+                      return _PostCard(post: filteredPosts[index]);
                     },
                   ),
           ),
@@ -185,7 +172,7 @@ class _HomescreenState extends State<Homescreen> {
       margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
-            color: const Color(0xff1D1537).withOpacity(0.11),
+            color: const Color(0xff1D1537).withOpacity(0.1),
             blurRadius: 40,
             spreadRadius: 0),
       ]),
@@ -307,7 +294,6 @@ class _HomescreenState extends State<Homescreen> {
                     const SizedBox(height: 15),
                     const Text("Type", style: TextStyle(fontSize: 16)),
                     DropdownButton<String>(
-                      // Select 'Exchange' or 'Donation'
                       isExpanded: true,
                       value: selectedType,
                       hint: const Text("Select type"),
@@ -342,7 +328,7 @@ class _HomescreenState extends State<Homescreen> {
     );
   }
 
-  // AppBar widget
+  // AppBar
   AppBar appBar() {
     return AppBar(
       backgroundColor: Colors.white,
@@ -371,12 +357,64 @@ class _HomescreenState extends State<Homescreen> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: SvgPicture.asset('assets/icons/setting-svgrepo-com.svg',
-                height: 20, width: 20),
+            child: SvgPicture.asset(
+              'assets/icons/notification.svg',
+              height: 20,
+              width: 20,
+            ),
           ),
         ),
       ],
-      centerTitle: true,
+    );
+  }
+}
+
+class _PostCard extends StatelessWidget {
+  final post_screen.Post post;
+  const _PostCard({Key? key, required this.post}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.all(10),
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: NetworkImage(post.userProfilePic),
+              radius: 30,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(post.username,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(post.productName),
+                  Image.network(post.imageUrl),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.thumb_up),
+                        onPressed: () {},
+                      ),
+                      Text(post.likes.toString()),
+                      IconButton(
+                        icon: const Icon(Icons.comment),
+                        onPressed: () {},
+                      ),
+                      Text(post.comments.toString()),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
