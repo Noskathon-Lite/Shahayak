@@ -1,0 +1,42 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Go compiled binary
+*.out
+
+# Vendor dependencies (if not using Go modules)
+vendor/
+
+# Dependency directories created by `go mod`
+go.sum
+go.work
+go.work.sum
+
+# IDE/editor-specific files
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs and debugging files
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Coverage files
+*.cover
+
+# Test binary artifacts
+*.test
+
+# Temporary files
+*.tmp
+*.temp
+
+# Generated files
+gen/
