@@ -61,3 +61,7 @@ func NewBackendServer(address string) *BackendServer {
 		connections: 0,
 	}
 }
+
+func (s *BackendServer) GetConnections() int {
+	return s.connections
+}
