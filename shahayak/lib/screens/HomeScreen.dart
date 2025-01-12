@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'User.dart';
 import 'post.dart';
@@ -12,12 +14,34 @@ class Homescreen extends StatefulWidget {
 
 class _HomescreenState extends State<Homescreen> {
   List<CategoryModel> categories = [];
+  List<Post> allPosts = [];
+  List<Post> filteredPosts = [];
   String? selectedCategory;
   RangeValues priceRange = const RangeValues(0, 10000);
   String? selectedType;
 
+  void _initializaData() {
+    categories = CategoryModel.getCategories();
+    allPosts = Post.getPosts();
+    _applyFilters();
+  }
+
+  void _applyFilters() {
+    setState(() {
+      filteredPosts = filteredPosts.where((post) {
+        final isCategoryMatch =
+            selectedCategory == null || selectedCategory == post.category;
+        final isPriceMatch =
+            post.price >= priceRange.start && post.price <= priceRange.end;
+        final isTypeMatch = selectedType == null || selectedType == post.type;
+        return isCategoryMatch && isPriceMatch && isTypeMatch;
+      }).toList();
+    });
+  }
+
   void _getCategories() {
     categories = CategoryModel.getCategories();
+    setState(() {});
   }
 
   void _openFilterBottomSheet() {
@@ -49,10 +73,11 @@ class _HomescreenState extends State<Homescreen> {
                     DropdownButton<String>(
                       isExpanded: true,
                       value: selectedCategory,
+                      hint: const Text('Select a category'), // Added hint
                       items: categories.map((category) {
                         return DropdownMenuItem<String>(
                           value: category.categoryName,
-                          child: Text(category.categoryName),
+                          child: Text(category.categoryName ?? 'Unknown'),
                         );
                       }).toList(),
                       onChanged: (String? value) {
@@ -85,6 +110,7 @@ class _HomescreenState extends State<Homescreen> {
                     DropdownButton<String>(
                       isExpanded: true,
                       value: selectedType,
+                      hint: const Text("Select type"),
                       items: ["Exchange", "Donation"].map((type) {
                         return DropdownMenuItem(
                           value: type,
@@ -102,6 +128,7 @@ class _HomescreenState extends State<Homescreen> {
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
+                        _applyFilters();
                       },
                       child: const Text('Apply'),
                     ),
@@ -123,7 +150,6 @@ class _HomescreenState extends State<Homescreen> {
 
   @override
   Widget build(BuildContext context) {
-    _getCategories();
     return Scaffold(
       appBar: appBar(),
       body: Column(
@@ -140,14 +166,27 @@ class _HomescreenState extends State<Homescreen> {
               Container(
                 height: 40,
                 color: Colors.black,
-                child: ListView.builder(
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      color: categories[index].boxColor,
-                    );
-                  },
-                ),
+                child: categories.isEmpty
+                    ? const Center(child: Text("No categories available"))
+                    : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categories.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: const EdgeInsets.all(5),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: categories[index].boxColor,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              categories[index].categoryName ?? "Unknown",
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
+                      ),
               ),
             ],
           )
@@ -158,14 +197,14 @@ class _HomescreenState extends State<Homescreen> {
 
   Container _SearchField() {
     return Container(
-        margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
-        decoration: BoxDecoration(boxShadow: [
-          BoxShadow(
-              color: const Color(0xff1D1537).withOpacity(0.11),
-              blurRadius: 40,
-              spreadRadius: 0),
-        ]),
-        child: TextField(
+      margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
+            color: const Color(0xff1D1537).withOpacity(0.11),
+            blurRadius: 40,
+            spreadRadius: 0),
+      ]),
+      child: TextField(
           decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
@@ -205,8 +244,8 @@ class _HomescreenState extends State<Homescreen> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide.none,
-              )),
-        ));
+              ))),
+    );
   }
 
   AppBar appBar() {
