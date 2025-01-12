@@ -45,4 +45,5 @@ class UserLoginView(APIView):
             else:
                 return Response({'error' : {'non_field_error': ['Email or Password is invalid']}}, status = status.HTTP_404_NOT_FOUND)
         
-        
+class SendEmail(APIView):
+    pass       
