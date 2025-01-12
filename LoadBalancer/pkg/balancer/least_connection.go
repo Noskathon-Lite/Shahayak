@@ -2,10 +2,10 @@ package balancer
 
 import (
 	"LoadBalancer/pkg/server"
+	"LoadBalancer/pkg/utils"
 	"fmt"
 	"net/http"
 	"sync"
-	"LoadBalancer/pkg/utils"
 )
 
 type LeastConnection struct {
