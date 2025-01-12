@@ -22,87 +22,97 @@ class _HomescreenState extends State<Homescreen> {
 
   void _openFilterBottomSheet() {
     showModalBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        builder: (context) {
-          return SingleChildScrollView(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return DraggableScrollableSheet(
+          expand: false,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
               child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Filter',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          )),
-                      const SizedBox(height: 20),
-                      //Filter:1 category dropdwon
-                      const Text('Category', style: TextStyle(fontSize: 16)),
-                      DropdownButton<String>(
-                        isExpanded: true,
-                        value: selectedCategory,
-                        items: categories.map((category) {
-                          return DropdownMenuItem<String>(
-                            value: category.categoryName,
-                            child: Text(category.categoryName),
-                          );
-                        }).toList(),
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedCategory = value;
-                          });
-                        },
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Filter',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    const SizedBox(height: 20),
+                    // Filter: Category Dropdown
+                    const Text('Category', style: TextStyle(fontSize: 16)),
+                    DropdownButton<String>(
+                      isExpanded: true,
+                      value: selectedCategory,
+                      items: categories.map((category) {
+                        return DropdownMenuItem<String>(
+                          value: category.categoryName,
+                          child: Text(category.categoryName),
+                        );
+                      }).toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedCategory = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 15),
+                    // Filter: Price Range Slider
+                    const Text('Price Range', style: TextStyle(fontSize: 16)),
+                    RangeSlider(
+                      values: priceRange,
+                      min: 0,
+                      max: 10000,
+                      divisions: 5,
+                      labels: RangeLabels(
+                        priceRange.start.round().toString(),
+                        priceRange.end.round().toString(),
                       ),
-                      const SizedBox(height: 15),
-                      //Filter:2 Price Range
-                      const Text('Price Range', style: TextStyle(fontSize: 16)),
-                      RangeSlider(
-                        values: priceRange,
-                        min: 0,
-                        max: 10000,
-                        divisions: 5,
-                        labels: RangeLabels(
-                          priceRange.start.round().toString(),
-                          priceRange.end.round().toString(),
-                        ),
-                        onChanged: (RangeValues values) {
-                          setState(() {
-                            priceRange = values;
-                          });
-                        },
-                      ),
-                      // Filter 3: Type (Exchange/Donation)
-                      const Text("Type", style: TextStyle(fontSize: 16)),
-                      DropdownButton<String>(
-                        isExpanded: true,
-                        value: selectedType,
-                        items: ["Exchange", "Donation"].map((type) {
-                          return DropdownMenuItem(
-                            value: type,
-                            child: Text(type),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedType = value!;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      //Filter:4 Apply Button
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Apply'),
-                      ),
-                    ],
-                  )));
-        });
+                      onChanged: (RangeValues values) {
+                        setState(() {
+                          priceRange = values;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 15),
+                    // Filter: Type Dropdown
+                    const Text("Type", style: TextStyle(fontSize: 16)),
+                    DropdownButton<String>(
+                      isExpanded: true,
+                      value: selectedType,
+                      items: ["Exchange", "Donation"].map((type) {
+                        return DropdownMenuItem(
+                          value: type,
+                          child: Text(type),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedType = value!;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    // Filter: Apply Button
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Apply'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
