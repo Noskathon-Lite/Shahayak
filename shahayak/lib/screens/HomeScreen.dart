@@ -12,8 +12,23 @@ class Homescreen extends StatefulWidget {
 
 class _HomescreenState extends State<Homescreen> {
   List<CategoryModel> categories = [];
+  String? selectedCategory;
+  RangeValues priceRange = RangeValues(0, 10000);
+  String? selectedType;
+
   void _getCategories() {
     categories = CategoryModel.getCategories();
+  }
+
+  void _openFilterBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (context) {
+          return const Padding(padding: EdgeInsets.all(20));
+        });
   }
 
   @override
@@ -92,9 +107,12 @@ class _HomescreenState extends State<Homescreen> {
                         indent: 10,
                         endIndent: 10,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SvgPicture.asset('assets/icons/Filter.svg'),
+                      GestureDetector(
+                        onTap: _openFilterBottomSheet,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SvgPicture.asset('assets/icons/Filter.svg'),
+                        ),
                       ),
                     ],
                   ),
