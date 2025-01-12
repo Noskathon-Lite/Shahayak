@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 
 class CategoryModel {
-  String name;
-  String iconPath;
-  Color boxColor;
+  final String? categoryName;
+  final Color boxColor;
 
-  CategoryModel(
-      {required this.name, required this.iconPath, required this.boxColor});
+  CategoryModel({this.categoryName, required this.boxColor});
+
+  // A method to get a list of categories (you can customize this with actual data)
   static List<CategoryModel> getCategories() {
-    List<CategoryModel> categories = [];
-    categories.add(CategoryModel(
-        name: 'Category',
-        iconPath: 'assets/icons/.svg',
-        boxColor: Colors.pink));
-
-    return categories;
+    return [
+      CategoryModel(categoryName: 'Technology', boxColor: Colors.blue),
+      CategoryModel(categoryName: 'Education', boxColor: Colors.green),
+      CategoryModel(categoryName: 'Health', boxColor: Colors.red),
+      CategoryModel(categoryName: 'Sports', boxColor: Colors.orange),
+      CategoryModel(categoryName: 'Fashion', boxColor: Colors.purple),
+      CategoryModel(categoryName: 'Food', boxColor: Colors.yellow),
+    ];
   }
 }
