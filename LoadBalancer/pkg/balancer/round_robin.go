@@ -2,6 +2,7 @@ package balancer
 
 import (
 	"LoadBalancer/pkg/server"
+	"fmt"
 	"net/http"
 	"sync"
 )
@@ -35,6 +36,10 @@ func (r *RoundRobinBalancer) GetServer() server.Server {
 	}
 }
 
+func (r *RoundRobinBalancer) GetPort() string {
+	return r.port
+}
+
 func (r *RoundRobinBalancer) HealthCheck() {
 	for {
 		for i := range r.Servers {
@@ -49,4 +54,9 @@ func (r *RoundRobinBalancer) HealthCheck() {
 
 		}
 	}
+}
+func (r *RoundRobinBalancer) ServeProxy(res http.ResponseWriter, req *http.Request) {
+	targetedServer := r.GetServer()
+	fmt.Println("the targeted server is ", targetedServer)
+	targetedServer.ServeHttp(res, req)
 }

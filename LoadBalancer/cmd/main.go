@@ -3,6 +3,7 @@ package main
 import (
 	"LoadBalancer/pkg/balancer"
 	"LoadBalancer/pkg/server"
+	"net/http"
 )
 
 func main() {
@@ -12,4 +13,14 @@ func main() {
 		server.NewBackendServer("https://www.youtube.com"),
 	}
 	roundRobinBalancer := balancer.NewRoundRobinLoadBalancer(servers, "8000", "/healthcheck")
+	go roundRobinBalancer.HealthCheck()
+	handleRedirect := func(res http.ResponseWriter, req *http.Request) {
+		roundRobinBalancer.ServeProxy(res, req)
+	}
+	http.HandleFunc("/", handleRedirect)
+	err := http.ListenAndServe(":"+roundRobinBalancer.GetPort(), nil)
+	if err != nil {
+		HandleError(err)
+	}
+
 }
