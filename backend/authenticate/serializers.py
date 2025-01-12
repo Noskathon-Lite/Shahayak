@@ -34,7 +34,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     password2= serializers.CharField(style = {'input_type': 'password' }, write_only= True)
     class Meta:
         model = User
-        fields = ('email', 'username', 'password', 'password2')
+        fields = ('email', 'username', 'password', 'password2', 'is_verified')
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -55,3 +55,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ['profile_picture','phone_number','about']
 
+class VerifyAccountSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField(max_length=4)

@@ -43,6 +43,8 @@ class User(AbstractBaseUser):
     )
     username = models.CharField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
+    is_verified = models.BooleanField(default=False)
+    otp = models.CharField(max_length = 4, null = True, blank = True)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
