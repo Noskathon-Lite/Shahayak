@@ -7,3 +7,9 @@ type Server interface {
 	IsAlive() bool
 	ServeHttp(res http.ResponseWriter, req *http.Request)
 }
+
+type BackendServer struct {
+	address     string
+	active      bool
+	connections int
+}
