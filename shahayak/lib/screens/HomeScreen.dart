@@ -169,7 +169,19 @@ class _HomescreenState extends State<Homescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      appBar: AppBar(
+        title: const Text(
+          'Shahayak',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        centerTitle: true,
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -201,7 +213,7 @@ class _HomescreenState extends State<Homescreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CreatePostScreen()),
+            MaterialPageRoute(builder: (context) => const CreatePostScreen()),
           );
         },
         backgroundColor: Colors.blue,
@@ -215,7 +227,7 @@ class _HomescreenState extends State<Homescreen> {
       margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
-            color: const Color(0xff1D1537).withOpacity(0.11),
+            color: const Color(0xff1D1537).withOpacity(0.12),
             blurRadius: 40,
             spreadRadius: 0),
       ]),
