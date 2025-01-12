@@ -27,17 +27,35 @@ class _HomescreenState extends State<Homescreen> {
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         builder: (context) {
-          return const Padding(
-              padding: EdgeInsets.all(20),
+          return Padding(
+              padding: const EdgeInsets.all(20),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Filter',
+                  const Text('Filter',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       )),
+                  const SizedBox(height: 20),
+                  //Filter:1 category dropdwon
+                  const Text('Category', style: TextStyle(fontSize: 16)),
+                  DropdownButton<String>(
+                    isExpanded: true,
+                    value: selectedCategory,
+                    items: categories.map((category) {
+                      return DropdownMenuItem<String>(
+                        value: category.categoryName,
+                        child: Text(category.categoryName),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedCategory = value;
+                      });
+                    },
+                  ),
                 ],
               ));
         });
