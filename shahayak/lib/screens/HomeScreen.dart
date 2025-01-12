@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'User.dart';
-import 'post.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shahayak/models/category_model.dart';
-import 'package:shahayak/screens/CreatePostScreen.dart';
-import 'package:shahayak/screens/AddPostScreen.dart';
+import 'CreatePostScreen.dart'; // Ensure this is the correct import for the CreatePostScreen/ Define this file or import your CategoryModel class
+import 'Post.dart'; // Define this file or import your Post class
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
+
   @override
   State<Homescreen> createState() => _HomescreenState();
 }
@@ -69,7 +68,6 @@ class _HomescreenState extends State<Homescreen> {
                           fontWeight: FontWeight.bold,
                         )),
                     const SizedBox(height: 20),
-                    // Filter: Category Dropdown
                     const Text('Category', style: TextStyle(fontSize: 16)),
                     DropdownButton<String>(
                       isExpanded: true,
@@ -88,7 +86,6 @@ class _HomescreenState extends State<Homescreen> {
                       },
                     ),
                     const SizedBox(height: 15),
-                    // Filter: Price Range Slider
                     const Text('Price Range', style: TextStyle(fontSize: 16)),
                     RangeSlider(
                       values: priceRange,
@@ -106,26 +103,24 @@ class _HomescreenState extends State<Homescreen> {
                       },
                     ),
                     const SizedBox(height: 15),
-                    // Filter: Type Dropdown
                     const Text("Type", style: TextStyle(fontSize: 16)),
                     DropdownButton<String>(
                       isExpanded: true,
                       value: selectedType,
                       hint: const Text("Select type"),
                       items: ["Exchange", "Donation"].map((type) {
-                        return DropdownMenuItem(
+                        return DropdownMenuItem<String>(
                           value: type,
                           child: Text(type),
                         );
                       }).toList(),
                       onChanged: (String? value) {
                         setState(() {
-                          selectedType = null;
+                          selectedType = value;
                         });
                       },
                     ),
                     const SizedBox(height: 20),
-                    // Filter: Apply Button
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
@@ -152,64 +147,52 @@ class _HomescreenState extends State<Homescreen> {
 
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: appBar(),
-    body: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _SearchField(),
-        const SizedBox(height: 20),
-        Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 20),
-            ),
-            const SizedBox(height: 15),
+    return Scaffold(
+      appBar: appBar(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _SearchField(),
+          const SizedBox(height: 20),
+          if (categories.isNotEmpty) ...[
             Container(
               height: 40,
               color: Colors.black,
-              child: categories.isEmpty
-                  ? const Center(child: Text("No categories available"))
-                  : ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: categories.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.all(5),
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: categories[index].boxColor,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            categories[index].categoryName ?? "Unknown",
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        );
-                      },
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.all(5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: categories[index].boxColor,
+                      borderRadius: BorderRadius.circular(10),
                     ),
+                    child: Text(
+                      categories[index].categoryName ?? "Unknown",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
-        )
-      ],
-    ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: () {
-        // Navigate to the CreatePostScreen
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CreatePostScreen()),
-        );
-      },
-      backgroundColor: Colors.blue,
-      child: const Icon(Icons.add, color: Colors.white),
-    ),
-  );
-}
-
-}
-
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreatePostScreen()),
+          );
+        },
+        backgroundColor: Colors.blue,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+    );
+  }
 
   Container _SearchField() {
     return Container(
@@ -221,54 +204,56 @@ class _HomescreenState extends State<Homescreen> {
             spreadRadius: 0),
       ]),
       child: TextField(
-          onChanged: (query) {
-            setState(() {
-              filteredPosts = allPosts
-                  .where((post) =>
-                      post.title.toLowerCase().contains(query.toLowerCase()))
-                  .toList();
-            });
-          },
-          decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding: const EdgeInsets.all(15),
-              hintText: 'Search',
-              hintStyle: TextStyle(
-                color: Colors.black.withOpacity(0.6),
-                fontSize: 15,
-              ),
-              prefixIcon: Padding(
-                padding: const EdgeInsets.all(12),
-                child: SvgPicture.asset('assets/icons/Search.svg'),
-              ),
-              suffixIcon: SizedBox(
-                width: 100,
-                child: IntrinsicHeight(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      const VerticalDivider(
-                        color: Colors.black,
-                        thickness: 0.1,
-                        indent: 10,
-                        endIndent: 10,
-                      ),
-                      GestureDetector(
-                        onTap: _openFilterBottomSheet,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SvgPicture.asset('assets/icons/Filter.svg'),
-                        ),
-                      ),
-                    ],
+        onChanged: (query) {
+          setState(() {
+            filteredPosts = allPosts
+                .where((post) =>
+                    post.title.toLowerCase().contains(query.toLowerCase()))
+                .toList();
+          });
+        },
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.all(15),
+          hintText: 'Search',
+          hintStyle: TextStyle(
+            color: Colors.black.withOpacity(0.6),
+            fontSize: 15,
+          ),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.all(12),
+            child: SvgPicture.asset('assets/icons/Search.svg'),
+          ),
+          suffixIcon: SizedBox(
+            width: 100,
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const VerticalDivider(
+                    color: Colors.black,
+                    thickness: 0.1,
+                    indent: 10,
+                    endIndent: 10,
                   ),
-                ),
+                  GestureDetector(
+                    onTap: _openFilterBottomSheet,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SvgPicture.asset('assets/icons/Filter.svg'),
+                    ),
+                  ),
+                ],
               ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide.none,
-              ))),
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide.none,
+          ),
+        ),
+      ),
     );
   }
 
