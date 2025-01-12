@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shahayak/models/category_model.dart';
-import 'CreatePostScreen.dart'; // Ensure this is the correct import for the CreatePostScreen/ Define this file or import your CategoryModel class
-import 'Post.dart'; // Define this file or import your Post class
+import 'CreatePostScreen.dart';
+import 'post.dart';
+import 'package:shahayak/api_service.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -13,7 +14,9 @@ class Homescreen extends StatefulWidget {
 
 class _HomescreenState extends State<Homescreen> {
   List<CategoryModel> categories = [];
+  List<Post> posts = [];
   List<Post> allPosts = [];
+  bool isLoading = true;
   List<Post> filteredPosts = [];
   String? selectedCategory;
   RangeValues priceRange = const RangeValues(0, 10000);
@@ -143,6 +146,24 @@ class _HomescreenState extends State<Homescreen> {
     super.initState();
     _getCategories();
     _initializeData();
+    _fetchPosts();
+  }
+
+  Future<void> _fetchPosts() async {
+    try {
+      List<Post> fetchedPosts = await ApiService().fetchPosts();
+      setState(() {
+        posts = fetchedPosts;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to load posts')),
+      );
+    }
   }
 
   @override
