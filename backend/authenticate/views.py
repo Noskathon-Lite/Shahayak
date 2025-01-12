@@ -6,6 +6,7 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from .renderers import UserRenderer 
 from rest_framework_simplejwt.tokens import RefreshToken
+from .models import Profile
 
 # Create your views here.
 
@@ -26,6 +27,7 @@ class UserRegistrationView(APIView):
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             token = get_tokens_for_user(user)
+            Profile.objects.get_or_create(user=user)
             return Response({'token': token,'msg' : 'Registration succesful'}, status = status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
