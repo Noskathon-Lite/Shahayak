@@ -25,14 +25,14 @@ class Post {
     return [
       Post(
         id: 1,
-        productName: 'Smartphone',
-        category: 'Electronics',
+        productName: 'Atomic Habits',
+        category: 'Books',
         type: 'Exchange',
-        imageUrl: 'assets/smartphone.jpg',
+        imageUrl: 'assets/book.jpg',
         price: 300,
         purchaseDate: DateTime(2023, 1, 10),
         productCondition: 'Used',
-        caption: 'A barely used smartphone in excellent condition.',
+        caption: 'Read it once, in good condition',
       ),
     ];
   }

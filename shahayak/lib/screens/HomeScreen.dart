@@ -176,9 +176,8 @@ class _HomescreenState extends State<Homescreen> {
           _SearchField(),
           const SizedBox(height: 20),
           if (categories.isNotEmpty) ...[
-            Container(
+            SizedBox(
               height: 40,
-              color: Colors.black,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: categories.length,
@@ -190,10 +189,6 @@ class _HomescreenState extends State<Homescreen> {
                     decoration: BoxDecoration(
                       color: categories[index].boxColor,
                       borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      categories[index].categoryName ?? "Unknown",
-                      style: const TextStyle(color: Colors.white),
                     ),
                   );
                 },
