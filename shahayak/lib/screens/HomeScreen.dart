@@ -67,25 +67,28 @@ class _HomescreenState extends State<Homescreen> {
               spreadRadius: 0),
         ]),
         child: TextField(
-          decoration: InputDecoration(
-            hintText: 'search',
-            hintStyle: TextStyle(
-              color: Colors.black.withOpacity(0.6),
-            ),
-          ),
-        ));
+            decoration: InputDecoration(
+                hintText: 'search',
+                hintStyle: TextStyle(
+                  color: Colors.black.withOpacity(0.6),
+                  fontSize: 15,
+                ),
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: SvgPicture.asset('assets/icons/Search.svg'),
+                ),
+                suffixIcon: TextField(
+                  decoration: InputDecoration(
+                      hintText: 'Search',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {},
+                      )),
+                ))));
   }
 
   AppBar appBar() {
     return AppBar(
-      title: const Text(
-        'Shahayak',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
       backgroundColor: Colors.white,
       elevation: 0.0,
       leading: GestureDetector(
@@ -97,7 +100,7 @@ class _HomescreenState extends State<Homescreen> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: SvgPicture.asset('assets/icons/profile-svhrepo-com.svg',
+          child: SvgPicture.asset('assets/icons/profile-svgrepo-com.svg',
               height: 20, width: 20),
         ),
       ),
@@ -113,7 +116,7 @@ class _HomescreenState extends State<Homescreen> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: SvgPicture.asset('assets/icons/setting-svgrepo-com.svg',
-                height: 5, width: 5),
+                height: 20, width: 20),
           ),
         ),
       ],
