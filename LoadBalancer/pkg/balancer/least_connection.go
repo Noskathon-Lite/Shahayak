@@ -2,7 +2,6 @@ package balancer
 
 import (
 	"LoadBalancer/pkg/server"
-	"LoadBalancer/pkg/utils"
 	"fmt"
 	"net/http"
 	"sync"
@@ -31,4 +30,16 @@ func (lc *LeastConnection) GetServer() server.Server {
 	}
 	return selectedServer
 
+}
+
+func NewLeastConnectionServer(servers []server.Server, port string, healthCheckUrl string) *LeastConnection {
+	return &LeastConnection{
+		Servers:        servers,
+		HealthCheckUrl: healthCheckUrl,
+		port:           port,
+	}
+}
+
+func (r *LeastConnection) GetPort() string {
+	return r.port
 }
