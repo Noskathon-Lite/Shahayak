@@ -31,13 +31,13 @@ class _HomescreenState extends State<Homescreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _SearchField(),
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
           Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
+              const Padding(
+                padding: EdgeInsets.only(left: 20),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               Container(
                 height: 40,
                 color: Colors.black,
@@ -67,24 +67,44 @@ class _HomescreenState extends State<Homescreen> {
               spreadRadius: 0),
         ]),
         child: TextField(
-            decoration: InputDecoration(
-                hintText: 'search',
-                hintStyle: TextStyle(
-                  color: Colors.black.withOpacity(0.6),
-                  fontSize: 15,
+          decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.all(15),
+              hintText: 'Search',
+              hintStyle: TextStyle(
+                color: Colors.black.withOpacity(0.6),
+                fontSize: 15,
+              ),
+              prefixIcon: Padding(
+                padding: const EdgeInsets.all(12),
+                child: SvgPicture.asset('assets/icons/Search.svg'),
+              ),
+              suffixIcon: SizedBox(
+                width: 100,
+                child: IntrinsicHeight(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const VerticalDivider(
+                        color: Colors.black,
+                        thickness: 0.1,
+                        indent: 10,
+                        endIndent: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SvgPicture.asset('assets/icons/Filter.svg'),
+                      ),
+                    ],
+                  ),
                 ),
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: SvgPicture.asset('assets/icons/Search.svg'),
-                ),
-                suffixIcon: TextField(
-                  decoration: InputDecoration(
-                      hintText: 'Search',
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.search),
-                        onPressed: () {},
-                      )),
-                ))));
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide.none,
+              )),
+        ));
   }
 
   AppBar appBar() {
