@@ -29,12 +29,19 @@ func (r *RoundRobinBalancer) GetServer() server.Server {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	availableServer := r.Servers[r.CurrentIndex%len(r.Servers)]
-	for {
-		if availableServer.IsAlive() {
-			return availableServer
-		}
+	for !availableServer.IsAlive() {
 		r.CurrentIndex++
+		availableServer = r.Servers[r.CurrentIndex%len(r.Servers)]
 	}
+	r.CurrentIndex++
+	return availableServer
+	//availableServer := r.Servers[r.CurrentIndex%len(r.Servers)]
+	//for {
+	//	if availableServer.IsAlive() {
+	//		return availableServer
+	//	}
+	//	r.CurrentIndex++
+
 }
 
 func (r *RoundRobinBalancer) GetPort() string {
