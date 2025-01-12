@@ -21,61 +21,66 @@ class Post {
     required this.caption,
   });
 
-  // Static method to provide mock posts
   static List<Post> getPosts() {
     return [
       Post(
         id: 1,
-        productName: 'Smartphone',
-        category: 'Electronics',
-        type: 'Exchange',
-        imageUrl: 'assets/smartphone.jpg',
-        price: 300,
+        productName: 'Harry Potter',
+        category: 'Books',
+        type: 'Donation',
+        imageUrl: 'assets/Harry_Potter.jpg',
+        price: 0.0,
         purchaseDate: DateTime(2023, 1, 10),
         productCondition: 'Used',
-        caption: 'A barely used smartphone in excellent condition.',
+        caption: 'A well-loved copy of Harry Potter.',
       ),
       Post(
         id: 2,
-        productName: 'Laptop',
-        category: 'Electronics',
+        productName: 'The Hobbit',
+        category: 'Books',
         type: 'Donation',
-        imageUrl: 'assets/laptop.jpg',
-        price: 0,
-        purchaseDate: DateTime(2022, 5, 15),
-        productCondition: 'Like New',
-        caption: 'A laptop I don\'t use anymore.Free to anyone who needs it.',
+        imageUrl: 'assets/The_Hobbit.jpg',
+        price: 0.0,
+        purchaseDate: DateTime(2023, 3, 15),
+        productCondition: 'Used',
+        caption: 'A classic fantasy novel in great condition.',
+      ),
+      Post(
+        id: 3,
+        productName: 'T-shirt',
+        category: 'Clothing',
+        type: 'Exchange',
+        imageUrl: 'assets/T-shirt.jpg',
+        price: 10.0,
+        purchaseDate: DateTime(2023, 5, 20),
+        productCondition: 'New',
+        caption: 'A brand new T-shirt for exchange.',
+      ),
+      Post(
+        id: 4,
+        productName: 'Jeans',
+        category: 'Clothing',
+        type: 'Donation',
+        imageUrl: 'assets/Jeans.jpg',
+        price: 0.0,
+        purchaseDate: DateTime(2023, 8, 25),
+        productCondition: 'Used',
+        caption: 'Gently used jeans in good condition.',
       ),
     ];
   }
 
-  // Factory constructor to create a Post object from JSON
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      id: json['id'] ?? 0,
-      productName: json['productName'] ?? 'Unknown',
-      category: json['category'] ?? 'General',
-      type: json['type'] ?? 'Unknown',
-      imageUrl: json['imageUrl'] ?? '',
-      price: (json['price'] as num).toDouble(),
+      id: json['id'],
+      productName: json['productName'],
+      category: json['category'],
+      type: json['type'],
+      imageUrl: json['imageUrl'],
+      price: json['price'],
       purchaseDate: DateTime.parse(json['purchaseDate']),
-      productCondition: json['productCondition'] ?? 'Unknown',
-      caption: json['caption'] ?? '',
+      productCondition: json['productCondition'],
+      caption: json['caption'],
     );
-  }
-
-  // Method to convert a Post object to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'productName': productName,
-      'category': category,
-      'type': type,
-      'imageUrl': imageUrl,
-      'price': price,
-      'purchaseDate': purchaseDate.toIso8601String(),
-      'productCondition': productCondition,
-      'caption': caption,
-    };
   }
 }
