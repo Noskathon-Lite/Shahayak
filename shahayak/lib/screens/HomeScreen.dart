@@ -26,7 +26,7 @@ class _HomescreenState extends State<Homescreen> {
 
   void _applyFilters() {
     setState(() {
-      filteredPosts = filteredPosts.where((post) {
+      filteredPosts = allPosts.where((post) {
         final isCategoryMatch =
             selectedCategory == null || selectedCategory == post.category;
         final isPriceMatch =
@@ -144,6 +144,7 @@ class _HomescreenState extends State<Homescreen> {
   void initState() {
     super.initState();
     _getCategories();
+    _initializaData();
   }
 
   @override
@@ -204,10 +205,12 @@ class _HomescreenState extends State<Homescreen> {
       ]),
       child: TextField(
           onChanged: (query) {
-            filteredPosts = allPosts
-                .where((post) =>
-                    post.title.toLowerCase().contains(query.toLowerCase()))
-                .toList();
+            setState(() {
+              filteredPosts = allPosts
+                  .where((post) =>
+                      post.title.toLowerCase().contains(query.toLowerCase()))
+                  .toList();
+            });
           },
           decoration: InputDecoration(
               filled: true,
