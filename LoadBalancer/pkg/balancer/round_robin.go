@@ -2,6 +2,7 @@ package balancer
 
 import (
 	"LoadBalancer/pkg/server"
+	"LoadBalancer/pkg/utils"
 	"fmt"
 	"net/http"
 	"sync"
@@ -47,7 +48,7 @@ func (r *RoundRobinBalancer) HealthCheck() {
 			resp, err := http.Get(server.GetAddress() + r.HealthCheckUrl)
 			if err != nil || resp.Status != "200" {
 				server.Shutdown()
-				HandleError(err)
+				utils.HandleError(err)
 			} else {
 				server.MakeReady()
 			}

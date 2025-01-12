@@ -3,6 +3,7 @@ package main
 import (
 	"LoadBalancer/pkg/balancer"
 	"LoadBalancer/pkg/server"
+	"LoadBalancer/pkg/utils"
 	"net/http"
 )
 
@@ -20,7 +21,7 @@ func main() {
 	http.HandleFunc("/", handleRedirect)
 	err := http.ListenAndServe(":"+roundRobinBalancer.GetPort(), nil)
 	if err != nil {
-		HandleError(err)
+		utils.HandleError(err)
 	}
 
 }

@@ -1,6 +1,10 @@
 package server
 
-import "net/http"
+import (
+	"LoadBalancer/pkg/utils"
+	"net/http"
+	"net/url"
+)
 
 func (s *BackendServer) GetAddress() string {
 	return s.address
@@ -11,6 +15,10 @@ func (s *BackendServer) IsAlive() bool {
 }
 
 func (s *BackendServer) ServeHttp(res http.ResponseWriter, req *http.Request) {
+	targetUrl, err := url.Parse(s.GetAddress())
+	if err != nil {
+		utils.HandleError(err)
+	}
 
 }
 
