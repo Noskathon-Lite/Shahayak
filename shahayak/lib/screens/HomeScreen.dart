@@ -196,10 +196,10 @@ class _HomescreenState extends State<Homescreen> {
     ),
     floatingActionButton: FloatingActionButton(
       onPressed: () {
-        // Navigate to the post creation screen or open a dialog
+        // Navigate to the CreatePostScreen
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => AddPostScreen()),
+          MaterialPageRoute(builder: (context) => CreatePostScreen()),
         );
       },
       backgroundColor: Colors.blue,
@@ -208,7 +208,8 @@ class _HomescreenState extends State<Homescreen> {
   );
 }
 
-  }
+}
+
 
   Container _SearchField() {
     return Container(
