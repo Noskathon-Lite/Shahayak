@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import BaseUserManager, AbstractBaseU
+from django.conf import settings
 
 
 class UserManager(BaseUserManager):
@@ -68,3 +69,12 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+    
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    profile_picture = models.ImageField(default='images/profile_picture/default.jpg', upload_to='images/profile_picture')
+    phone_number = models.CharField(("Phone Number"), max_length=15, blank=True, null=True)
+    about = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username

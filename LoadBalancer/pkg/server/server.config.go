@@ -26,14 +26,17 @@ func (s *BackendServer) ServeHttp(res http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		utils.HandleError(err)
 	}
+	s.connections++
 	proxy.CopyHeaders(req, proxyReq)
 	proxyReq.URL.RawQuery = req.URL.RawQuery
 	client := &http.Client{}
 	resp, err := client.Do(proxyReq)
 	if err != nil {
 		http.Error(res, "Failed to connect to backend server", http.StatusBadGateway)
+		s.connections--
 		return
 	}
+
 	defer resp.Body.Close()
 	proxy.CopyResponseHeaders(resp, res)
 	res.WriteHeader(resp.StatusCode)
@@ -41,6 +44,7 @@ func (s *BackendServer) ServeHttp(res http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Println("Error copying response body:", err)
 	}
+	s.connections--
 }
 
 func (s *BackendServer) Shutdown() {
@@ -56,4 +60,8 @@ func NewBackendServer(address string) *BackendServer {
 		active:      false,
 		connections: 0,
 	}
+}
+
+func (s *BackendServer) GetConnections() int {
+	return s.connections
 }

@@ -8,6 +8,7 @@ type Server interface {
 	ServeHttp(res http.ResponseWriter, req *http.Request)
 	Shutdown()
 	MakeReady()
+	GetConnections() int
 }
 
 type BackendServer struct {
