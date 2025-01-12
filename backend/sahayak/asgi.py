@@ -1,5 +1,5 @@
 """
-ASGI config for Shahayak project.
+ASGI config for sahayak project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Shahayak.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sahayak.settings')
 
 application = get_asgi_application()
