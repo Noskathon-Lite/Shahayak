@@ -3,6 +3,8 @@ import 'User.dart';
 import 'post.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shahayak/models/category_model.dart';
+import 'package:shahayak/screens/CreatePostScreen.dart';
+import 'package:shahayak/screens/AddPostScreen.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -18,9 +20,10 @@ class _HomescreenState extends State<Homescreen> {
   RangeValues priceRange = const RangeValues(0, 10000);
   String? selectedType;
 
-  void _initializaData() {
+  void _initializeData() {
     categories = CategoryModel.getCategories();
     allPosts = Post.getPosts();
+    filteredPosts = List.from(allPosts);
     _applyFilters();
   }
 
@@ -117,7 +120,7 @@ class _HomescreenState extends State<Homescreen> {
                       }).toList(),
                       onChanged: (String? value) {
                         setState(() {
-                          selectedType = value;
+                          selectedType = null;
                         });
                       },
                     ),
@@ -144,54 +147,67 @@ class _HomescreenState extends State<Homescreen> {
   void initState() {
     super.initState();
     _getCategories();
-    _initializaData();
+    _initializeData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SearchField(),
-          const SizedBox(height: 40),
-          Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 20),
-              ),
-              const SizedBox(height: 15),
-              Container(
-                height: 40,
-                color: Colors.black,
-                child: categories.isEmpty
-                    ? const Center(child: Text("No categories available"))
-                    : ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: categories.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.all(5),
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: categories[index].boxColor,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              categories[index].categoryName ?? "Unknown",
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          );
-                        },
-                      ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
+  return Scaffold(
+    appBar: appBar(),
+    body: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SearchField(),
+        const SizedBox(height: 20),
+        Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 20),
+            ),
+            const SizedBox(height: 15),
+            Container(
+              height: 40,
+              color: Colors.black,
+              child: categories.isEmpty
+                  ? const Center(child: Text("No categories available"))
+                  : ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: categories.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: categories[index].boxColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            categories[index].categoryName ?? "Unknown",
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        )
+      ],
+    ),
+    floatingActionButton: FloatingActionButton(
+      onPressed: () {
+        // Navigate to the post creation screen or open a dialog
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AddPostScreen()),
+        );
+      },
+      backgroundColor: Colors.blue,
+      child: const Icon(Icons.add, color: Colors.white),
+    ),
+  );
+}
+
   }
 
   Container _SearchField() {
