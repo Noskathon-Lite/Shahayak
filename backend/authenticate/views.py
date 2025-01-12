@@ -7,6 +7,8 @@ from django.contrib.auth import authenticate
 from .renderers import UserRenderer 
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Profile
+from rest_framework.permissions import IsAuthenticated
+
 
 # Create your views here.
 
@@ -49,3 +51,38 @@ class UserLoginView(APIView):
         
 class SendEmail(APIView):
     pass       
+
+class ProfileDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [UserRenderer]
+
+    def get(self, request):
+        try:
+            # Retrieve the profile of the currently authenticated user
+            profile = Profile.objects.get(user=request.user)
+            serializer = ProfileSerializer(profile)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Profile.DoesNotExist:
+            return Response({'error': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request):
+        try:
+            # Retrieve the profile of the currently authenticated user
+            profile = Profile.objects.get(user=request.user)
+            # Update the profile using the serializer
+            serializer = ProfileSerializer(profile, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Profile.DoesNotExist:
+            return Response({'error': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request):
+        try:
+            # Retrieve and delete the profile of the currently authenticated user
+            profile = Profile.objects.get(user=request.user)
+            profile.delete()
+            return Response({'msg': 'Profile deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except Profile.DoesNotExist:
+            return Response({'error': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)

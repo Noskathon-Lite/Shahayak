@@ -5,6 +5,8 @@ from rest_framework.views import APIView
 from .models import Product
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+
 
 # Create your views here.
 
@@ -12,6 +14,7 @@ from rest_framework import status
 class ProductListView(APIView):
     
     def get(self, request):
+
         product_type = request.query_params.get('type')
         
         if product_type not in ['exchange', 'donation']:
@@ -68,3 +71,44 @@ class Product_DetailsView(APIView):
         product = Product.objects.get(pk=pk)
         product.delete()
         return Response({'msg' : 'Deleted product'}, status= status.HTTP_204_NO_CONTENT)
+    
+class CommentListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)  # Associate the comment with the logged-in user
+            return Response({'msg': 'Comment Posted Successfully'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def get(self, request):
+        product_id = request.query_params.get('product')  # Get 'product' query param
+        if product_id:
+            comments = Comment.objects.filter(product_id=product_id)  # Filter by product
+        else:
+            comments = Comment.objects.all()
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
+    
+    
+class CommentUpdateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request,pk):
+        comment = Comment.objects.get(pk=pk)
+        serializers= CommentSerializer(comment, data= request.data)
+        
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+        else:
+            return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+    def delete(self,request,pk):
+        comment = Comment.objects.get(pk=pk)
+        comment.delete()
+        return Response({'msg' : 'Deleted product'}, status= status.HTTP_204_NO_CONTENT)
+    
+        
+        
+

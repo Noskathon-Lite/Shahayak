@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User,Profile
+from .models import User,Profile,Comment
 
 # Register your models here.
 class UserAdmin(BaseUserAdmin):
@@ -34,3 +34,4 @@ class UserAdmin(BaseUserAdmin):
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
 admin.site.register(Profile)
+admin.site.register(Comment)
