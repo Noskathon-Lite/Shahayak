@@ -11,7 +11,7 @@ class CategoryModel {
     List<CategoryModel> categories = [];
     categories.add(CategoryModel(
         name: 'Category',
-        iconPath: 'assets/icons/Search.svg',
+        iconPath: 'assets/icons/.svg',
         boxColor: Colors.pink));
 
     return categories;
