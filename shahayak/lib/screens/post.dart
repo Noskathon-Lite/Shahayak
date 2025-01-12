@@ -21,6 +21,7 @@ class Post {
     required this.caption,
   });
 
+  // Static method to provide mock posts
   static List<Post> getPosts() {
     return [
       Post(
@@ -34,20 +35,47 @@ class Post {
         productCondition: 'Used',
         caption: 'A barely used smartphone in excellent condition.',
       ),
+      Post(
+        id: 2,
+        productName: 'Laptop',
+        category: 'Electronics',
+        type: 'Donation',
+        imageUrl: 'assets/laptop.jpg',
+        price: 0,
+        purchaseDate: DateTime(2022, 5, 15),
+        productCondition: 'Like New',
+        caption: 'A laptop I don\'t use anymore.Free to anyone who needs it.',
+      ),
     ];
   }
 
+  // Factory constructor to create a Post object from JSON
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      id: json['id'],
-      productName: json['productName'],
-      category: json['category'],
-      type: json['type'],
-      imageUrl: json['imageUrl'],
-      price: json['price'],
+      id: json['id'] ?? 0,
+      productName: json['productName'] ?? 'Unknown',
+      category: json['category'] ?? 'General',
+      type: json['type'] ?? 'Unknown',
+      imageUrl: json['imageUrl'] ?? '',
+      price: (json['price'] as num).toDouble(),
       purchaseDate: DateTime.parse(json['purchaseDate']),
-      productCondition: json['productCondition'],
-      caption: json['caption'],
+      productCondition: json['productCondition'] ?? 'Unknown',
+      caption: json['caption'] ?? '',
     );
+  }
+
+  // Method to convert a Post object to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'productName': productName,
+      'category': category,
+      'type': type,
+      'imageUrl': imageUrl,
+      'price': price,
+      'purchaseDate': purchaseDate.toIso8601String(),
+      'productCondition': productCondition,
+      'caption': caption,
+    };
   }
 }
