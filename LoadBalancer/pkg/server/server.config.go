@@ -1,7 +1,10 @@
 package server
 
 import (
+	"LoadBalancer/pkg/proxy"
 	"LoadBalancer/pkg/utils"
+	"io"
+	"log"
 	"net/http"
 	"net/url"
 )
@@ -11,7 +14,7 @@ func (s *BackendServer) GetAddress() string {
 }
 
 func (s *BackendServer) IsAlive() bool {
-	return s.active
+	return true
 }
 
 func (s *BackendServer) ServeHttp(res http.ResponseWriter, req *http.Request) {
@@ -19,7 +22,25 @@ func (s *BackendServer) ServeHttp(res http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		utils.HandleError(err)
 	}
-
+	proxyReq, err := http.NewRequest(req.Method, targetUrl.String()+req.URL.Path, req.Body)
+	if err != nil {
+		utils.HandleError(err)
+	}
+	proxy.CopyHeaders(req, proxyReq)
+	proxyReq.URL.RawQuery = req.URL.RawQuery
+	client := &http.Client{}
+	resp, err := client.Do(proxyReq)
+	if err != nil {
+		http.Error(res, "Failed to connect to backend server", http.StatusBadGateway)
+		return
+	}
+	defer resp.Body.Close()
+	proxy.CopyResponseHeaders(resp, res)
+	res.WriteHeader(resp.StatusCode)
+	_, err = io.Copy(res, resp.Body)
+	if err != nil {
+		log.Println("Error copying response body:", err)
+	}
 }
 
 func (s *BackendServer) Shutdown() {
