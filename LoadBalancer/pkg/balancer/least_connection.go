@@ -43,3 +43,18 @@ func NewLeastConnectionServer(servers []server.Server, port string, healthCheckU
 func (r *LeastConnection) GetPort() string {
 	return r.port
 }
+func (r *RoundRobinBalancer) LeastConnectionHealthCheck() {
+	for {
+		for i := range r.Servers {
+			server := r.Servers[i]
+			resp, err := http.Get(server.GetAddress() + r.HealthCheckUrl)
+			if err != nil || resp.Status != "200" {
+				server.Shutdown()
+				utils.HandleError(err)
+			} else {
+				server.MakeReady()
+			}
+
+		}
+	}
+}
