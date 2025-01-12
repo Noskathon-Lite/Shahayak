@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  django_backend_1:
+    image: django-backend
+    build:
+      context: ./backend
+    ports:
+      - '9000:8000'
+    environment:
+      - DJANGO_ALLOWED_HOSTS=127.0.0.1
+
+  django_backend_2:
+    image: django-backend
+    build:
+      context: ./backend
+    ports:
+      - '9001:8000'
+    environment:
+      - DJANGO_ALLOWED_HOSTS=127.0.0.1
+
+  django_backend_3:
+    image: django-backend
+    build:
+      context: ./backend
+    ports:
+      - '9002:8000'
+    environment:
+      - DJANGO_ALLOWED_HOSTS=127.0.0.1
+
+  load_balancer:
+    image: load_balancer
+    build:
+      context: ./LoadBalancer  # Path to your load balancer Go project
+    ports:
+      - "8080:8080"
