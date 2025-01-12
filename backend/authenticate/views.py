@@ -16,7 +16,8 @@ def get_tokens_for_user(user):
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
-
+ 
+ 
 class UserRegistrationView(APIView):
     renderer_classes = [UserRenderer]
     def post(self, request):
@@ -27,8 +28,8 @@ class UserRegistrationView(APIView):
             token = get_tokens_for_user(user)
             return Response({'token': token,'msg' : 'Registration succesful'}, status = status.HTTP_201_CREATED)
         
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)    
-
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    
 class UserLoginView(APIView):
     renderer_classes = [UserRenderer]
     def post(self, request):
