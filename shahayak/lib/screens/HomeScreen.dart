@@ -207,8 +207,9 @@ class _HomescreenState extends State<Homescreen> {
         onChanged: (query) {
           setState(() {
             filteredPosts = allPosts
-                .where((post) =>
-                    post.title.toLowerCase().contains(query.toLowerCase()))
+                .where((post) => post.productName
+                    .toLowerCase()
+                    .contains(query.toLowerCase()))
                 .toList();
           });
         },
