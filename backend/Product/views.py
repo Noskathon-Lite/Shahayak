@@ -6,6 +6,7 @@ from .models import Product
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 
 
 # Create your views here.
@@ -110,5 +111,16 @@ class CommentUpdateView(APIView):
         return Response({'msg' : 'Deleted product'}, status= status.HTTP_204_NO_CONTENT)
     
         
-        
+class LikeToggleView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def post(self,request,pk):
+        product = get_object_or_404(Product, pk=pk)
+        like, created = Like.objects.get_or_create(user=request.user, product=product)
+       
+        if created:
+            serializer = LikeSerializer(like)
+            return Response({'status': 'liked','like': serializer.data}, status=status.HTTP_201_CREATED)
+        else:
+            like.delete()
+            return Response({'status': 'unliked'}, status=status.HTTP_200_OK)
