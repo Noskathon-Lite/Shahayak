@@ -7,32 +7,36 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
+from .filters import ProductFilter
+from rest_framework.generics import ListAPIView
 
 
 # Create your views here.
 
 
-class ProductListView(APIView):
-    
-    def get(self, request):
 
-        product_type = request.query_params.get('type')
-        
+class ProductListView(ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filterset_class = ProductFilter
+    search_fields = ['product_name']
+
+    def get_queryset(self):
+        # Validate the type parameter
+        product_type = self.request.query_params.get('type')
         if product_type not in ['exchange', 'donation']:
-            return Response(
+             return Response(
                 {'error': 'Invalid or missing type parameter. Must be "exchange" or "donation".'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
-        product = Product.objects.filter(type=product_type) #filters the product on the basis of their type
-        serializers = ProductSerializer(product, many = True)
-        return Response(serializers.data)
-     
+        return super().get_queryset().filter(type=product_type)
+
     def post(self, request):
-        serializers=ProductSerializer(data = request.data)
-        if serializers.is_valid():
-            product_type = serializers.validated_data.get('type')
-            serializers.save()
+        # Validate and save the product
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            product_type = serializer.validated_data.get('type')
+            serializer.save()
             
             platform_message = (
                 "Product posted to the Exchange platform."
@@ -44,8 +48,7 @@ class ProductListView(APIView):
                 status=status.HTTP_201_CREATED
             )
         else:
-             return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
 class Product_DetailsView(APIView):
