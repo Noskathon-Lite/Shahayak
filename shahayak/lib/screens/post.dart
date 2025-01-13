@@ -78,10 +78,10 @@ class Post {
       ),
       Post(
         id: 4,
-        productName: 'Jeans',
+        productName: 'Radahn set',
         category: 'Clothing',
         type: 'Donation',
-        imageUrl: 'assets/Jeans.jpg',
+        imageUrl: 'assets/radahn.jpg',
         price: 0.0,
         purchaseDate: DateTime(2023, 8, 25),
         productCondition: 'Used',

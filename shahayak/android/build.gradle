@@ -17,6 +17,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.0.2'
+        implementation 'com.google.android.gms:play-services-auth:19.0.0'
+
     }
 }
 

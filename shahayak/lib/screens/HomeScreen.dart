@@ -5,6 +5,7 @@ import 'CreatePostScreen.dart';
 import 'package:shahayak/api_service.dart';
 import 'package:shahayak/models/category.dart';
 import 'package:shahayak/screens/post.dart' as post_screen;
+import 'package:shahayak/screens/User.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -73,7 +74,7 @@ class _HomescreenState extends State<Homescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      appBar: appBar(context),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -259,10 +260,10 @@ class _HomescreenState extends State<Homescreen> {
                       isExpanded: true,
                       value: selectedCategory,
                       hint: const Text('Select a category'),
-                      items: categories.map((category) {
+                      items: ['Books', 'Clothing'].map((category) {
                         return DropdownMenuItem<String>(
-                          value: category.categoryName,
-                          child: Text(category.categoryName ?? 'Unknown'),
+                          value: category,
+                          child: Text(category),
                         );
                       }).toList(),
                       onChanged: (String? value) {
@@ -278,10 +279,12 @@ class _HomescreenState extends State<Homescreen> {
                       values: priceRange,
                       min: 0,
                       max: 10000,
-                      divisions: 5,
+                      divisions: 10,
+                      activeColor: Colors.blue,
+                      inactiveColor: Colors.grey[300],
                       labels: RangeLabels(
-                        priceRange.start.round().toString(),
-                        priceRange.end.round().toString(),
+                        'RS ${priceRange.start.round()}',
+                        'RS ${priceRange.end.round()}',
                       ),
                       onChanged: (RangeValues values) {
                         setState(() {
@@ -326,46 +329,51 @@ class _HomescreenState extends State<Homescreen> {
       },
     );
   }
+}
 
-  // AppBar
-  AppBar appBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0.0,
-      leading: GestureDetector(
+// AppBar
+AppBar appBar(BuildContext context) {
+  return AppBar(
+    backgroundColor: Colors.white,
+    elevation: 0.0,
+    leading: GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.all(10),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: SvgPicture.asset('assets/icons/profile-svgrepo-com.svg',
+            height: 20, width: 20),
+      ),
+    ),
+    actions: [
+      GestureDetector(
         onTap: () {},
         child: Container(
           margin: const EdgeInsets.all(10),
           alignment: Alignment.center,
+          width: 37,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: SvgPicture.asset('assets/icons/profile-svgrepo-com.svg',
-              height: 20, width: 20),
-        ),
-      ),
-      actions: [
-        GestureDetector(
-          onTap: () {},
-          child: Container(
-            margin: const EdgeInsets.all(10),
-            alignment: Alignment.center,
-            width: 37,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: SvgPicture.asset(
-              'assets/icons/notification.svg',
-              height: 20,
-              width: 20,
-            ),
+          child: SvgPicture.asset(
+            'assets/icons/notification.svg',
+            height: 20,
+            width: 20,
           ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
 }
 
 class _PostCard extends StatelessWidget {
