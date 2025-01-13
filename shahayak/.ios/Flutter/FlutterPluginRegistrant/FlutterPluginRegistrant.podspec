@@ -21,4 +21,5 @@ Depends on all your plugins, and provides a function to register them.
   s.dependency 'Flutter'
   s.dependency 'google_sign_in_ios'
   s.dependency 'image_picker_ios'
+  s.dependency 'shared_preferences_foundation'
 end

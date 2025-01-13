@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
@@ -14,51 +13,56 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  // Sign in with email and password
+  Future<void> _signInWithEmailPassword() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
 
-  // Google Sign-In Function
-  Future<void> _signInWithGoogle() async {
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email and password are required.')),
+      );
+      return;
+    }
+
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        return;
-      }
-
-      // Get the authentication details
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      // Send token to backend for validation and to authenticate the user
       final response = await http.post(
-        Uri.parse(''),
+        Uri.parse(
+            'http://192.168.175.245:8000/api/user/register/'), // Replace with your API URL
         headers: <String, String>{
           'Content-Type': 'application/json',
         },
         body: json.encode({
-          'access_token': googleAuth.accessToken,
+          'email': email,
+          'password': password,
         }),
       );
 
       if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        // Display success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(responseData['msg'] ?? 'Login successful')),
+        );
+
+        // Navigate to the home screen
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       } else {
+        final responseData = json.decode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to authenticate with Google')),
+          SnackBar(content: Text(responseData['error'] ?? 'Login failed')),
         );
       }
     } catch (e) {
-      print("Google sign-in error: $e");
+      print("Error during login: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to sign in with Google')),
+        const SnackBar(content: Text('Error during login. Please try again.')),
       );
     }
   }
-
-  // Sign in with email and password
-  Future<void> _signInWithEmailPassword() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Email and password fields
+            // Email field
             TextField(
               controller: _emailController,
               decoration: const InputDecoration(
@@ -80,6 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 10),
+            // Password field
             TextField(
               controller: _passwordController,
               obscureText: true,
@@ -89,13 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            // Google Sign-In Button
-            ElevatedButton(
-              onPressed: _signInWithGoogle,
-              child: const Text("Sign in with Google"),
-            ),
-            const SizedBox(height: 20),
-            // Email/Password Sign-In Button (optional)
+            // Sign-In Button
             ElevatedButton(
               onPressed: _signInWithEmailPassword,
               child: const Text("Sign in with Email/Password"),
