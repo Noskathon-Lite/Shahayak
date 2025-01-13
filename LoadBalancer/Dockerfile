@@ -5,7 +5,7 @@ WORKDIR /app
 COPY go.mod ./
 COPY . .
 
-RUN go build -o loadbalancer .
+RUN go build -o loadbalancer ./cmd/main.go
 
 EXPOSE 8080
 
