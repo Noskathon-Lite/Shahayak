@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import Product
+from .models import Product,Like
 from authenticate.models import Comment
+
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,3 +17,8 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['product_id', 'comment_text']  # Include 'product_id' in the fields
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ['user', 'product','liked_at']
