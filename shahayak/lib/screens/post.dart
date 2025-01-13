@@ -11,7 +11,7 @@ class Post {
   String username;
   String userProfilePic;
   int likes;
-  int comments;
+  List<String> comments;
 
   Post({
     required this.id,
@@ -29,6 +29,14 @@ class Post {
     required this.comments,
   });
 
+  void likePOst() {
+    likes++;
+  }
+
+  void addComment(String comment) {
+    comments.add(comment);
+  }
+
   static List<Post> getPosts() {
     return [
       Post(
@@ -44,23 +52,22 @@ class Post {
         username: 'Ichiban Kasuga',
         userProfilePic: 'assets/ichiban.jpg',
         likes: 10,
-        comments: 5,
+        comments: ['Great book!', 'I love Harry Potter!'],
       ),
       Post(
-        id: 2,
-        productName: 'The Hobbit',
-        category: 'Books',
-        type: 'Donation',
-        imageUrl: 'assets/The_Hobbit.jpg',
-        price: 0.0,
-        purchaseDate: DateTime(2023, 3, 15),
-        productCondition: 'Used',
-        caption: 'A classic fantasy novel in great condition.',
-        username: 'Majima Goro',
-        userProfilePic: 'assets/majima.jpg',
-        likes: 7,
-        comments: 3,
-      ),
+          id: 2,
+          productName: 'The Hobbit',
+          category: 'Books',
+          type: 'Donation',
+          imageUrl: 'assets/The_Hobbit.jpg',
+          price: 0.0,
+          purchaseDate: DateTime(2023, 3, 15),
+          productCondition: 'Used',
+          caption: 'A classic fantasy novel in great condition.',
+          username: 'Majima Goro',
+          userProfilePic: 'assets/majima.jpg',
+          likes: 7,
+          comments: ['I love this book!']),
       Post(
         id: 3,
         productName: 'T-shirt',
@@ -74,7 +81,7 @@ class Post {
         username: 'Kiryu Kazuma',
         userProfilePic: 'assets/kiryu.jpg',
         likes: 25,
-        comments: 8,
+        comments: ['I want to exchange this for a book.'],
       ),
       Post(
         id: 4,
@@ -89,7 +96,7 @@ class Post {
         username: 'General Radahn',
         userProfilePic: 'assets/radahn.jpg',
         likes: 15,
-        comments: 4,
+        comments: ['Great sets!I love Elden Ring.'],
       ),
     ];
   }
