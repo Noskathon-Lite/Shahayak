@@ -140,9 +140,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             Slider(
               value: _price,
               min: 0,
-              max: 1000,
-              divisions: 100,
-              label: '\$${_price.toStringAsFixed(2)}',
+              max: 10000,
+              divisions: 10,
+              label: 'RS ${_price.toStringAsFixed(2)}',
               onChanged: (value) {
                 setState(() {
                   _price = value;
